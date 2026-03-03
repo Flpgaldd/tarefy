@@ -14,7 +14,13 @@
         <div>
             <Strong>{{ $task->title }}</Strong>
             <p>{{ $task->due_datetime }}</p>
-            <p>status:{{ $task->status}}</p>
+            <p>Estado:{{ $task->status}}</p>
         </div>
+        <a href="{{ route('tasks.edit', $task->id) }}">Editar</a>
+        <form method="POST" action="{{ route('tasks.destroy', $task->id) }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Excluir</button>
+        </form>
         @endforeach
 </x-app-layout>
