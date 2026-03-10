@@ -4,9 +4,21 @@
     <form method="POST" action="{{ route('tasks.store') }}">
         @csrf
         <input type="text" name="title" placeholder="Nova tarefa" required>
-        <input type="date" name="due_datetime" required>
+        <input type="datetime-local" name="due_datetime" required>
+        <input type="hidden" name="status" value="Pendente">
         <button type="submit">Criar tarefa</button>
     </form>
+
+        <main>
+            <div class="row">
+                @if(session('msg') || session('error') || session('success'))
+                    <p class="msg">{{ session('msg') }}</p>
+                    <p class="error">{{ session('error') }}</p>
+                    <p class="success">{{ session('success') }}</p>
+                @endif
+                @yield('content')
+            </div>
+        </main>
 
     <hr>
 
@@ -14,6 +26,7 @@
         <div>
             <Strong>{{ $task->title }}</Strong>
             <p>{{ $task->due_datetime }}</p>
+            <p>{{ $task->due_time }}</p>
             <p>Estado:{{ $task->status}}</p>
         </div>
         <a href="{{ route('tasks.edit', $task->id) }}">Editar</a>
