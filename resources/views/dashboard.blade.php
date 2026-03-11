@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Home') }}
         </h2>
     </x-slot>
 
@@ -15,7 +15,7 @@
                         <a href="{{ route('tasks.index') }}" class="text-blue-500 hover:underline">Ver minhas tarefas</a>
                     </div>
                     <div class="mt-3">
-                        <a href="{{ route('profile.edit') }}" class="text-blue-500 hover:underline">Editar meu perfil</a>
+                        <a href="{{ route('profile.perfil') }}" class="text-blue-500 hover:underline">Ver meu perfil</a>
                     </div> 
                 </div>
             </div>

@@ -1,5 +1,9 @@
 <x-app-layout>
-    <h2>Minhas tarefas</h2>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Criar Tarefa') }}
+        </h2>
+    
 
     <form method="POST" action="{{ route('tasks.store') }}">
         @csrf
@@ -19,7 +23,7 @@
                 @yield('content')
             </div>
         </main>
-
+    </x-slot>
     <hr>
 
     @foreach($tasks as $task)
@@ -36,4 +40,5 @@
             <button type="submit">Excluir</button>
         </form>
         @endforeach
+        
 </x-app-layout>
