@@ -12,7 +12,16 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Auth::user()->tasks()->get();
-        return view('tasks.index', compact('tasks'));
+        $user = Auth::user();
+
+
+        $totalTasks = $user->tasks()->count();
+        $pendingTasks = $user->tasks()->where('status', 'Pendente')->count();
+        $doingTasks = $user->tasks()->where('status', 'Fazendo')->count();
+        $completedTasks = $user->tasks()->where('status', 'Concluída')->count();
+        return view('tasks.index', compact
+        ('tasks', 'totalTasks', 'pendingTasks',
+         'doingTasks', 'completedTasks'));
     }
 
     public function store(Request $request)
@@ -20,11 +29,11 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'due_datetime' => 'required|date',
+            'status' => 'required|in:Pendente,Fazendo,Concluída',
         ]);
        $task = Auth::user()->tasks()->create([
             'title' => $request->title,
-            'due_datetime' => $request->due_datetime,
-            'status' => 'Pendente',
+            'due_datetime' => $request->due_datetime
             ]);
 
         if($task)
@@ -40,6 +49,10 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'due_datetime' => 'required|date',
+            'status' => 'required|in:Pendente,Fazendo,Concluída',
+            
+        ],[
+            'status.in' => 'O status deve ser Pendente, Fazendo ou Concluída.',
         ]);
         $task->update([
             'title' => $request->title,
@@ -77,9 +90,34 @@ class TaskController extends Controller
 
     public function search(Request $request)
     {
-        $status = $request->input('status');
-        $tasks = Auth::user()->tasks()->where('status', 'like', "%$status%")->get();
-        return view('tasks.index', compact('tasks'));
+       $status = $request->query('status');
+        $user = Auth::user();
+        $query = $user->tasks();
+       
+       if ($status == 'Pendente') {
+            $query->pending();
+        }
+
+        if ($status == 'Fazendo') {
+            $query->doing();
+        }
+
+        if ($status == 'Concluída') {
+            $query->completed();
+        }
+        // if(!($status == 'all')){
+        //     $tasks = $query->searchStatus($status)->get();
+        // } else {
+        //     $tasks = $query->get();
+        // }
+        $tasks = $query->get(); 
+        $totalTasks = $user->tasks()->count();
+        $pendingTasks = $user->tasks()->where('status', 'Pendente')->count();
+        $doingTasks = $user->tasks()->where('status', 'Fazendo')->count();
+        $completedTasks = $user->tasks()->where('status', 'Concluída')->count();
+        return view('tasks.index', compact
+        ('tasks', 'totalTasks', 'pendingTasks',
+         'doingTasks', 'completedTasks'));
     }
 
     public function show(Task $task)
