@@ -6,32 +6,31 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
-{
+{   
     public function index()
-    {
-        $tasks = Auth::user()->tasks()->get();
+    {   
         $user = Auth::user();
 
+        $tasks = $user->tasks()->orderBy('due_datetime', 'asc')->get();
+        
 
-        $totalTasks = $user->tasks()->count();
-        $pendingTasks = $user->tasks()->where('status', 'Pendente')->count();
-        $doingTasks = $user->tasks()->where('status', 'Fazendo')->count();
-        $completedTasks = $user->tasks()->where('status', 'Concluída')->count();
-        return view('tasks.index', compact
-        ('tasks', 'totalTasks', 'pendingTasks',
-         'doingTasks', 'completedTasks'));
+
+         $stats = $this->getTaskStats($user);
+        
+         return view('tasks.index', array_merge(
+            ['tasks' => $tasks],    
+            $stats
+         ));
     }
 
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'due_datetime' => 'required|date',
-            'status' => 'required|in:Pendente,Fazendo,Concluída',
-        ]);
-       $task = Auth::user()->tasks()->create([
+        $user = Auth::user();
+       $task = $user->tasks()->create([
             'title' => $request->title,
             'due_datetime' => $request->due_datetime
             ]);
@@ -42,18 +41,9 @@ class TaskController extends Controller
             return redirect()->route('tasks.index')->with('error', 'Ocorreu um erro ao criar a tarefa.');
     }
 
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
         Gate::authorize('update', $task);
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'due_datetime' => 'required|date',
-            'status' => 'required|in:Pendente,Fazendo,Concluída',
-            
-        ],[
-            'status.in' => 'O status deve ser Pendente, Fazendo ou Concluída.',
-        ]);
         $task->update([
             'title' => $request->title,
             'due_datetime' => $request->due_datetime,
@@ -91,9 +81,11 @@ class TaskController extends Controller
     public function search(Request $request)
     {
        $status = $request->query('status');
-        $user = Auth::user();
+        
+       $user = Auth::user();
+
         $query = $user->tasks();
-       
+        
        if ($status == 'Pendente') {
             $query->pending();
         }
@@ -105,19 +97,16 @@ class TaskController extends Controller
         if ($status == 'Concluída') {
             $query->completed();
         }
-        // if(!($status == 'all')){
-        //     $tasks = $query->searchStatus($status)->get();
-        // } else {
-        //     $tasks = $query->get();
-        // }
-        $tasks = $query->get(); 
-        $totalTasks = $user->tasks()->count();
-        $pendingTasks = $user->tasks()->where('status', 'Pendente')->count();
-        $doingTasks = $user->tasks()->where('status', 'Fazendo')->count();
-        $completedTasks = $user->tasks()->where('status', 'Concluída')->count();
-        return view('tasks.index', compact
-        ('tasks', 'totalTasks', 'pendingTasks',
-         'doingTasks', 'completedTasks'));
+
+        $tasks = $query->orderBy('due_datetime', 'asc')
+        ->get();
+
+        $stats = $this->getTaskStats($user);
+        
+        return view('tasks.index', array_merge(
+            ['tasks' => $tasks],
+            $stats
+        ));
     }
 
     public function show(Task $task)
@@ -125,5 +114,14 @@ class TaskController extends Controller
         Gate::authorize('view', $task);
 
         return view('tasks.index', compact('task'));
+    }
+    private function getTaskStats($user)
+    {
+        return [
+            'total' => $user->tasks()->count(),
+            'pending' => $user->tasks()->pending()->count(),
+            'doing' => $user->tasks()->doing()->count(),
+            'completed' => $user->tasks()->completed()->count(),
+        ];
     }
 } 

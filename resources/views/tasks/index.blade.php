@@ -48,10 +48,10 @@
             </form>
             <hr>
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <p>Total de tarefas: {{ $totalTasks }}</p>
-                    <p>Tarefas Pendentes: {{ $pendingTasks }}</p>
-                    <p>Tarefas Fazendo: {{ $doingTasks }}</p>
-                    <p>Tarefas Concluídas: {{ $completedTasks }}</p>
+                    <p>Total de tarefas: {{ $total }}</p>
+                    <p>Tarefas Pendentes: {{ $pending }}</p>
+                    <p>Tarefas Fazendo: {{ $doing }}</p>
+                    <p>Tarefas Concluídas: {{ $completed}}</p>
                 </div>  
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 @foreach($tasks as $task)
