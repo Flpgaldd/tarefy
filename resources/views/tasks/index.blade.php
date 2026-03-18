@@ -59,6 +59,9 @@
                         <Strong>{{ $task->title }}</Strong>
                         <p>{{ $task->due_datetime }}</p>
                         <p>Estado:{{ $task->status}}</p>
+                        @if($task->due_datetime && \Carbon\Carbon::parse($task->due_datetime)->isPast() && $task->status !== 'Concluída')
+                            <span class="text-red-500 font-bold">⚠️ Atrasada</span>
+                        @endif
                     </div>
                     <a href="{{ route('tasks.edit', $task->id) }}">Editar</a>
                     <form method="POST" action="{{ route('tasks.destroy', $task->id) }}">

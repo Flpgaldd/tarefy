@@ -12,6 +12,7 @@ class Task extends Model
         'description',
         'due_datetime',
         'status',
+        "priority",
     ];
     public function user()
     {
@@ -32,8 +33,21 @@ class Task extends Model
         return $query->where('status', 'Concluída');
     }
 
+    public function scopeOverdue($query)
+    {
+        return $query->where('due_datetime', '<', now())->where('status', '!=', 'Concluída')->wheredate('due_datetime', '!=', now());
+    }
+
     // public function scopeSearchStatus($query, $status)
     // {
     //     return $query->where('status', $status);
     // }
+    const PRIORITY_LOW = 'low';
+    const PRIORITY_MEDIUM = 'medium';
+    const PRIORITY_HIGH = 'high';
+
+
+    protected $casts = [
+    'due_datetime' => 'datetime',
+    ];
 }
