@@ -3,16 +3,22 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Criar Tarefa') }}
         </h2>
+        <br>
+        
     
 
     <form method="POST" action="{{ route('tasks.store') }}">
         @csrf
+        <p>Nome da tarefa:</p>
         <input type="text" name="title" placeholder="Nova tarefa" required>
-        <input type="datetime-local" name="due_datetime" required>
+        <p style="margin-top: 10px;">Data de vencimento:</p>  
+        <input type="datetime-local" name="due_datetime" required style="width: 198px;">
         <input type="hidden" name="status" value="Pendente">
-        <button type="submit">Criar tarefa</button>
+        <p style="margin-top: 10px;">Adicionar lembrete:</p>
+        <input type="datetime-local" name="reminder_datetime" style="width: 198px;">
+        <br>
+        <button type="submit" style="margin-top:15px; padding: 5px 10px; background-color: #66db42; cursor: pointer; border-radius: 6px; color: white;">Criar tarefa</button>
     </form>
-
         <main>
             <div class="row">
                 @if(session('msg') || session('error') || session('success'))
@@ -46,13 +52,13 @@
                     </div>
                 </div>
             </form>
-            <hr>
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <p>Total de tarefas: {{ $total }}</p>
                     <p>Tarefas Pendentes: {{ $pending }}</p>
                     <p>Tarefas Fazendo: {{ $doing }}</p>
                     <p>Tarefas Concluídas: {{ $completed}}</p>
                 </div>  
+                <hr>
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 @foreach($tasks as $task)
                     <div>
@@ -68,7 +74,11 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit">Excluir</button>
+                        <br>
                     </form>
+                    <br>
+                    <hr>
+                    <br>
                 @endforeach
                 <hr>
             </div>

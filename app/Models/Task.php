@@ -1,7 +1,11 @@
 <?php
 
+//Model serve para representar uma entidade do banco de dados, ou seja, uma tabela. No caso, o model seria para representar a tabela de tarefas, onde cada tarefa tem um título, descrição, data de vencimento, status e prioridade. 
+//O model também pode ter relacionamentos com outros models, como o relacionamento entre a tarefa e o usuário que a criou, ou o relacionamento entre a tarefa e os lembretes associados a ela.
+
 namespace App\Models;
 use App\Models\User;
+use app\Models\TaskReminder;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,4 +54,8 @@ class Task extends Model
     protected $casts = [
     'due_datetime' => 'datetime',
     ];
+    public function reminders()
+    {
+        return $this->hasMany(TaskReminder::class);
+    }
 }

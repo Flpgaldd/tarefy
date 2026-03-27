@@ -1,5 +1,9 @@
 <?php
 
+//A controller é responsável por receber as requisições do usuário, processar os dados e retornar uma resposta.
+//No caso, o controller seria para gerenciar as tarefas, ou seja, criar, editar, excluir e listar as tarefas do usuário.
+//O controller também pode ter métodos para filtrar as tarefas por status, ou para adicionar lembretes às tarefas.
+
 namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
@@ -35,11 +39,18 @@ class TaskController extends Controller
             'due_datetime' => $request->due_datetime
             ]);
 
-        if($task)
+        if ($request->filled('remind_at')) {
+            $task->reminders()->create([
+            'remind_at' => $request->remind_at
+            ]);
+        }
+
+            if($task)
             return redirect()->route('tasks.index')->with('msg', 'Tarefa criada com sucesso!');
         else        
             return redirect()->route('tasks.index')->with('error', 'Ocorreu um erro ao criar a tarefa.');
-    }
+    
+        }
 
     public function update(UpdateTaskRequest $request, Task $task)
     {
