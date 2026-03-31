@@ -47,11 +47,15 @@
                             <option value="Concluída" {{ request('status') == 'Concluída' ? 'selected' : '' }}>Concluída</option>
                         </select>
                     </div>
-                    <div class="flex items-end">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Filtrar</button>
-                    </div>
                 </div>
-                <input type="text" name="title" placeholder="Buscar tarefa" style="height:38px; border-radius: 6px; margin-top: 10px;">
+                <input type="text" name="title" placeholder="Buscar tarefa" value="{{ request('title') }}" style="height:38px; border-radius: 6px; margin-top: 10px;">
+            <div class="flex items-end">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" style="margin-right: 10px; margin-top: 10px;">Filtrar</button>
+                        <a href="{{ route('tasks.index') }}">
+                            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Limpar</button>
+                        </a>
+            </div>  
+                
             </form>
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <p>Total de tarefas: {{ $total }}</p>
