@@ -92,11 +92,19 @@ class TaskController extends Controller
     public function search(Request $request)
     {
        $status = $request->query('status');
+
+       $title = $request->query('title');
+
+       
         
        $user = Auth::user();
 
         $query = $user->tasks();
         
+        if ($title) {
+            $query->where('title', 'LIKE', "%{$title}%");
+        }
+
        if ($status == 'Pendente') {
             $query->pending();
         }

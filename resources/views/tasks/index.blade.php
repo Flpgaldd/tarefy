@@ -51,6 +51,7 @@
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Filtrar</button>
                     </div>
                 </div>
+                <input type="text" name="title" placeholder="Buscar tarefa" style="height:38px; border-radius: 6px; margin-top: 10px;">
             </form>
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <p>Total de tarefas: {{ $total }}</p>
