@@ -1,5 +1,7 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    {{-- 🎨 ALTERADO: texto de apoio de text-gray-600/dark:text-gray-400 para
+         text-ink/60 (mesmo padrão aplicado em todas as telas de auth deste lote). --}}
+    <div class="mb-4 text-sm text-ink/60">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
     </div>
 

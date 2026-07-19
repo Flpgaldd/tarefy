@@ -1,10 +1,12 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        {{-- 🎨 ALTERADO: mesma troca de cor de texto do restante do app (ver
+             delete-user-form.blade.php para a justificativa completa). --}}
+        <h2 class="text-lg font-medium text-ink">
             {{ __('Update Password') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p class="mt-1 text-sm text-ink/60">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </p>
     </header>
@@ -35,12 +37,15 @@
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             @if (session('status') === 'password-updated')
+                {{-- 🎨 ALTERADO: confirmação "Saved." de text-gray-600 para text-ember-dark,
+                     mesmo tratamento dado ao auth-session-status — reforça que é uma
+                     confirmação de sucesso, não texto neutro. --}}
                 <p
                     x-data="{ show: true }"
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
+                    class="text-sm font-medium text-ember-dark"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

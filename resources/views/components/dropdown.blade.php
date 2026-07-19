@@ -1,4 +1,6 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-gray-700'])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-ink-soft'])
+{{-- 🎨 ALTERADO: contentClasses padrão de bg-white/dark:bg-gray-700 para bg-ink-soft,
+     mantendo o menu suspenso dentro do tema preto usado na navbar. --}}
 
 @php
 $alignmentClasses = match ($align) {
@@ -28,7 +30,9 @@ $width = match ($width) {
             class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
             style="display: none;"
             @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
+        {{-- 🎨 ALTERADO: anel de contorno de ring-black/5 para ring-ember/30,
+             dando um traço sutil de laranja ao redor do menu. --}}
+        <div class="rounded-md ring-1 ring-ember/30 {{ $contentClasses }}">
             {{ $content }}
         </div>
     </div>

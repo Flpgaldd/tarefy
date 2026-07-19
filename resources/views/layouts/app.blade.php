@@ -7,6 +7,10 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- 🎨 ALTERADO: favicon adicionado, apontando pro tarefy-mark.svg em public/images/.
+             Sem esse arquivo salvo na pasta certa, o ícone da aba continua em branco. --}}
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/tarefy-logo-horizontal.svg') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -15,13 +19,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        {{--
+            🎨 ALTERADO: fundo geral trocado de bg-gray-100/dark:bg-gray-900 para bg-mist.
+            O tema dark:* foi removido em todo o layout porque a nova identidade já é
+            fixa (preto estrutural + laranja + branco) — manter dark mode misturado
+            criaria uma segunda paleta concorrendo com a oficial.
+        --}}
+        <div class="min-h-screen bg-mist">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                {{-- 🎨 ALTERADO: header de bg-white/shadow para bg-ink com barra lateral
+                     laranja, criando o "bloco estrutural preto" pedido nas diretrizes
+                     e dando o maior destaque visual ao título da página. --}}
+                <header class="bg-ink border-l-4 border-ember">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-paper">
                         {{ $header }}
                     </div>
                 </header>
