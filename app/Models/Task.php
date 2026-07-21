@@ -5,7 +5,10 @@
 
 namespace App\Models;
 use App\Models\User;
-use app\Models\TaskReminder;
+use App\Models\TaskReminder;
+// 🔒 ALTERADO: "app\Models\TaskReminder" (minúsculo) → "App\Models\TaskReminder".
+// Funciona no Windows local por acaso (sistema de arquivos não é case-sensitive),
+// mas quebra com "Class not found" assim que o projeto for pra um servidor Linux.
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,7 +42,13 @@ class Task extends Model
 
     public function scopeOverdue($query)
     {
-        return $query->where('due_datetime', '<', now())->where('status', '!=', 'Concluída')->wheredate('due_datetime', '!=', now());
+        // 🔒 ALTERADO: removida a condição `->wheredate('due_datetime', '!=', now())`.
+        // Ela excluía qualquer tarefa vencida NO PRÓPRIO DIA de hoje — uma tarefa
+        // com vencimento às 08h, consultada às 18h (já claramente atrasada), não
+        // entrava nesse scope. Isso é usado agora pelo card "Atrasadas" do
+        // dashboard, então precisava estar correto.
+        return $query->where('due_datetime', '<', now())
+                     ->where('status', '!=', 'Concluída');
     }
 
     // public function scopeSearchStatus($query, $status)

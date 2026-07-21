@@ -2,14 +2,21 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// 🎯 ALTERADO: antes era só `return view('dashboard');`, sem nenhum dado.
+// Agora busca as estatísticas reais do usuário logado através de
+// User::taskStats() — a mesma fonte usada em "Minhas Tarefas", garantindo que
+// os números do dashboard sempre coincidam com os da outra tela.
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $stats = Auth::user()->taskStats();
+
+    return view('dashboard', $stats);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

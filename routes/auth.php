@@ -15,7 +15,12 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    // 🔒 ALTERADO: throttle:6,1 adicionado ao POST de registro (máximo 6 tentativas
+    // por minuto, por IP+rota — é o mesmo mecanismo padrão do Laravel usado no
+    // reenvio de e-mail de verificação, aqui embaixo). Sem isso, nada impedia
+    // criação automatizada de contas em massa (spam de cadastro/bots).
+    Route::post('register', [RegisteredUserController::class, 'store'])
+        ->middleware('throttle:6,1');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

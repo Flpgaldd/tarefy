@@ -1,5 +1,14 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    {{--
+        🎨/🔒 ALTERADO: form ganhou x-data com o valor da senha em tempo real
+        (Alpine.js, que o projeto já usa em outros componentes como o dropdown).
+        Isso alimenta o checklist de requisitos logo abaixo do campo de senha —
+        cada regra fica vermelha (✕) ou verde (✓) conforme o usuário digita,
+        sem precisar recarregar a página. As mesmas 4 regras aqui no front
+        espelham exatamente a validação do backend (RegisteredUserController):
+        mínimo 8 caracteres, letras, números e 1 caractere especial.
+    --}}
+    <form method="POST" action="{{ route('register') }}" x-data="{ password: '' }">
         @csrf
 
         <!-- Name -->
@@ -23,7 +32,34 @@
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
                             name="password"
+                            x-model="password"
                             required autocomplete="new-password" />
+
+            {{-- 🔒 ALTERADO: checklist de requisitos da senha, atualiza em tempo real.
+                 Verde (texto-emerald) = regra cumprida; vermelho = ainda falta.
+                 Só aparece depois que o usuário começa a digitar (x-show). --}}
+            <div class="mt-2 space-y-1" x-show="password.length > 0" style="display: none;">
+                <p class="flex items-center gap-1.5 text-xs font-medium"
+                   :class="password.length >= 8 ? 'text-emerald-700' : 'text-red-700'">
+                    <span x-text="password.length >= 8 ? '✓' : '✕'"></span>
+                    {{ __('Mínimo de 8 caracteres') }}
+                </p>
+                <p class="flex items-center gap-1.5 text-xs font-medium"
+                   :class="/[a-zA-Z]/.test(password) ? 'text-emerald-700' : 'text-red-700'">
+                    <span x-text="/[a-zA-Z]/.test(password) ? '✓' : '✕'"></span>
+                    {{ __('Pelo menos 1 letra') }}
+                </p>
+                <p class="flex items-center gap-1.5 text-xs font-medium"
+                   :class="/[0-9]/.test(password) ? 'text-emerald-700' : 'text-red-700'">
+                    <span x-text="/[0-9]/.test(password) ? '✓' : '✕'"></span>
+                    {{ __('Pelo menos 1 número') }}
+                </p>
+                <p class="flex items-center gap-1.5 text-xs font-medium"
+                   :class="/[^a-zA-Z0-9]/.test(password) ? 'text-emerald-700' : 'text-red-700'">
+                    <span x-text="/[^a-zA-Z0-9]/.test(password) ? '✓' : '✕'"></span>
+                    {{ __('Pelo menos 1 caractere especial (ex: ! @ # $)') }}
+                </p>
+            </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -40,7 +76,6 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            {{-- 🎨 ALTERADO: mesmo tratamento de link do login (text-ink/60, hover ember-dark). --}}
             <a class="underline text-sm text-ink/60 hover:text-ember-dark rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ember" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>

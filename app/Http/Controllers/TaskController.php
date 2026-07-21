@@ -23,7 +23,10 @@ class TaskController extends Controller
         
 
 
-         $stats = $this->getTaskStats($user);
+         // 🔒 ALTERADO: antes chamava $this->getTaskStats($user) (método privado
+         // duplicado aqui dentro). Agora usa $user->taskStats(), a mesma fonte
+         // usada pelo dashboard — garante que os números batem nas duas telas.
+         $stats = $user->taskStats();
         
          return view('tasks.index', array_merge(
             ['tasks' => $tasks],    
@@ -81,7 +84,7 @@ class TaskController extends Controller
 
         Gate::authorize('delete', $task);
 
-        $deleted = $task->delete();
+        $deleted = $task->delete($task);
 
         if($deleted)
             return redirect()->route('tasks.index')->with('msg', 'Tarefa excluída com sucesso!');
@@ -120,7 +123,9 @@ class TaskController extends Controller
         $tasks = $query->orderBy('due_datetime', 'asc')
         ->get();
 
-        $stats = $this->getTaskStats($user);
+        // 🔒 ALTERADO: mesma troca — usa $user->taskStats() em vez do método
+        // privado duplicado.
+        $stats = $user->taskStats();
         
         return view('tasks.index', array_merge(
             ['tasks' => $tasks],
@@ -134,13 +139,4 @@ class TaskController extends Controller
 
         return view('tasks.index', compact('task'));
     }
-    private function getTaskStats($user)
-    {
-        return [
-            'total' => $user->tasks()->count(),
-            'pending' => $user->tasks()->pending()->count(),
-            'doing' => $user->tasks()->doing()->count(),
-            'completed' => $user->tasks()->completed()->count(),
-        ];
-    }
-} 
+}
