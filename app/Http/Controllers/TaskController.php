@@ -93,45 +93,36 @@ class TaskController extends Controller
     }
 
     public function search(Request $request)
-    {
-       $status = $request->query('status');
+{
+    $status = $request->query('status');
+    $title  = $request->query('title');
+    $user   = Auth::user();
 
-       $title = $request->query('title');
+    $query = $user->tasks();
 
-       
-        
-       $user = Auth::user();
-
-        $query = $user->tasks();
-        
-        if ($title) {
-            $query->where('title', 'LIKE', "%{$title}%");
-        }
-
-       if ($status == 'Pendente') {
-            $query->pending();
-        }
-
-        if ($status == 'Fazendo') {
-            $query->doing();
-        }
-
-        if ($status == 'Concluída') {
-            $query->completed();
-        }
-
-        $tasks = $query->orderBy('due_datetime', 'asc')
-        ->get();
-
-        // 🔒 ALTERADO: mesma troca — usa $user->taskStats() em vez do método
-        // privado duplicado.
-        $stats = $user->taskStats();
-        
-        return view('tasks.index', array_merge(
-            ['tasks' => $tasks],
-            $stats
-        ));
+    // Filtro por Título
+    if ($title) {
+        $query->where('title', 'LIKE', "%{$title}%");
     }
+
+    // Filtro por Status
+    if ($status && $status !== 'all') {
+        // Se preferir usar o valor exato enviado pelo formulário:
+        $query->where('status', $status);
+    }
+
+    $tasks = $query->orderBy('due_datetime', 'asc')->get();
+
+    $stats = $user->taskStats();
+
+    // 🔒 ALTERADO: mesma troca — usa $user->taskStats() em vez do método
+        // privado duplicado.
+
+    return view('tasks.index', array_merge(
+        ['tasks' => $tasks],
+        $stats
+    ));
+}
 
     public function show(Task $task)
     {

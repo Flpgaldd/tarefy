@@ -26,9 +26,9 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
     public function scopePending($query)
-    {
-        return $query->where('status', 'Pendente');
-    }
+{
+    return $query->where('status', 'Pendente');
+}
 
     public function scopeDoing($query)
     {

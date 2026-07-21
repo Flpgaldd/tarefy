@@ -13,7 +13,7 @@
             {{ __('Criar Tarefa') }}
         </h2>
     </x-slot>
-
+ 
     @if(session('msg') || session('error') || session('success'))
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
             {{-- 🎨 ALTERADO: mensagens de sessão agora em cartões, não texto solto.
@@ -23,9 +23,9 @@
             @if(session('success'))<p class="mb-2 px-4 py-3 rounded-md bg-ember/10 border border-ember text-ember-dark text-sm font-medium">{{ session('success') }}</p>@endif
         </div>
     @endif
-
+ 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
+ 
         {{-- ===================== CRIAR TAREFA ===================== --}}
         {{-- 🎨 ALTERADO: cartão branco com borda esquerda laranja (mesmo padrão do
              header preto), inputs com classes de foco em ember, label em preto. --}}
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <input type="hidden" name="status" value="Pendente">
-
+ 
                     <button type="submit"
                         class="inline-flex items-center px-4 py-2 bg-ember border border-transparent rounded-md font-semibold text-xs text-paper uppercase tracking-widest hover:bg-ember-dark focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2 transition ease-in-out duration-150">
                         {{-- 🎨 ALTERADO: de style inline verde (#66db42) para classe bg-ember,
@@ -62,7 +62,7 @@
                 </form>
             </div>
         </div>
-
+ 
         {{-- ===================== FILTROS ===================== --}}
         {{-- 🎨 ALTERADO: mesmo padrão de cartão, título em caixa alta discreto
              (eyebrow) em vez de <h4>/<hr> soltos. --}}
@@ -105,7 +105,7 @@
                 </form>
             </div>
         </div>
-
+ 
         {{-- ===================== ESTATÍSTICAS ===================== --}}
         {{-- 🎨 ALTERADO: de parágrafos empilhados para 4 cartões pretos em grid,
              com o número em laranja grande — são os dados que devem ter "maior
@@ -128,7 +128,7 @@
                 <p class="text-xs uppercase tracking-widest text-paper/60 mt-1">Concluídas</p>
             </div>
         </div>
-
+ 
         {{-- ===================== LISTA DE TAREFAS ===================== --}}
         {{-- 🎨 ALTERADO: de <div>/<hr> repetidos para cartões individuais com borda
              lateral colorida por status (preto=Pendente, laranja=Fazendo,
